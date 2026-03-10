@@ -292,7 +292,13 @@ function devStatusStyle(v) {
 
 function remoteUrl(id) { return `${location.origin}/api/v1/remote/check/${id}` }
 function copyUrl(id) {
-  const text = remoteUrl(id)
+  const text = `接口地址：${remoteUrl(id)}
+
+响应示例：
+开启时：{"code": 1000, "data": true, "message": "success"}
+关闭时：{"code": 1000, "data": false, "message": "success"}
+
+使用说明：请求该接口，当 data === false 时关闭系统功能`
   // HTTPS 用 Clipboard API，HTTP 降级用 execCommand
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => {
