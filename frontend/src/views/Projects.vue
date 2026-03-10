@@ -91,20 +91,39 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="远程接口" min-width="220">
+        <el-table-column label="远程接口" min-width="160" align="center">
           <template #default="{ row }">
-            <div class="remote-url-cell">
-              <div class="remote-url-text" :title="remoteUrl(row.id)">
-                <el-icon :size="13" style="color: #6366f1; flex-shrink: 0;"><Link /></el-icon>
-                <span>{{ remoteUrl(row.id) }}</span>
-              </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <el-popover placement="left" :width="420" trigger="click">
+                <template #reference>
+                  <el-button size="small" plain style="font-size: 12px; border-color: #e0e7ff; color: #6366f1; background: #eef2ff;">
+                    <el-icon :size="12"><Link /></el-icon> 查看接口
+                  </el-button>
+                </template>
+                <div class="api-popover">
+                  <div class="api-popover-title">远程控制接口地址</div>
+                  <div class="api-url-box">
+                    <span>{{ remoteUrl(row.id) }}</span>
+                    <el-button size="small" text type="primary" @click="copyUrl(row.id)" style="flex-shrink:0;">
+                      <el-icon><CopyDocument /></el-icon> 复制
+                    </el-button>
+                  </div>
+                  <div class="api-popover-title" style="margin-top: 14px;">响应示例</div>
+                  <div class="api-resp-box">
+                    <div class="api-resp-item">
+                      <el-tag size="small" style="background:#f0fdf4;color:#10b981;border:none;">开启时</el-tag>
+                      <code>{"code": 1000, "data": true, "message": "success"}</code>
+                    </div>
+                    <div class="api-resp-item" style="margin-top: 8px;">
+                      <el-tag size="small" style="background:#fef2f2;color:#ef4444;border:none;">关闭时</el-tag>
+                      <code>{"code": 1000, "data": false, "message": "success"}</code>
+                    </div>
+                  </div>
+                  <div class="api-popover-tip">客户端判断 <code>data === false</code> 时关闭系统功能</div>
+                </div>
+              </el-popover>
               <el-switch v-model="row.remote_status" :active-value="1" :inactive-value="0"
-                @change="handleRemoteToggle(row)" size="small" style="--el-switch-on-color: #10b981; margin-left: 6px;" />
-              <el-tooltip content="复制" placement="top">
-                <el-button size="small" text @click.stop="copyUrl(row.id)">
-                  <el-icon :size="13"><CopyDocument /></el-icon>
-                </el-button>
-              </el-tooltip>
+                @change="handleRemoteToggle(row)" size="small" style="--el-switch-on-color: #10b981" />
             </div>
           </template>
         </el-table-column>
@@ -459,26 +478,57 @@ onMounted(loadData)
   align-items: center;
 }
 
-.remote-url-cell { display: flex; align-items: center; gap: 4px; }
-.remote-url-text {
+.api-popover { font-size: 13px; }
+.api-popover-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.api-url-box {
   display: flex;
   align-items: center;
-  gap: 5px;
-  flex: 1;
-  min-width: 0;
-  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-  font-size: 11px;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
   color: #6366f1;
-  background: #eef2ff;
-  padding: 3px 7px;
-  border-radius: 6px;
-  overflow: hidden;
-  white-space: nowrap;
+  word-break: break-all;
 }
-.remote-url-text span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.api-resp-box {
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.api-resp-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.api-resp-item code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: #94a3b8;
+}
+.api-popover-tip {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #94a3b8;
+  background: #fffbeb;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+.api-popover-tip code {
+  background: rgba(245,158,11,0.15);
+  color: #d97706;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: monospace;
 }
 
 .dev-status-selector {

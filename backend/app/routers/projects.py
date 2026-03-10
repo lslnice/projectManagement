@@ -86,10 +86,10 @@ async def project_stats(
     cursor = await db.execute("SELECT COUNT(*) FROM projects")
     total = (await cursor.fetchone())[0]
 
-    cursor = await db.execute("SELECT COUNT(*) FROM projects WHERE status = 'active'")
+    cursor = await db.execute("SELECT COUNT(*) FROM projects WHERE is_completed = 0")
     active = (await cursor.fetchone())[0]
 
-    cursor = await db.execute("SELECT COUNT(*) FROM projects WHERE status = 'completed'")
+    cursor = await db.execute("SELECT COUNT(*) FROM projects WHERE is_completed = 1")
     completed = (await cursor.fetchone())[0]
 
     cursor = await db.execute("SELECT COALESCE(SUM(total_amount), 0) FROM projects")
