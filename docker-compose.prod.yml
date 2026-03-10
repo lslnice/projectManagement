@@ -1,6 +1,6 @@
 services:
   backend:
-    image: ghcr.io/你的用户名/projectmanagement-backend:latest
+    image: ghcr.io/lslnice/projectmanagement-backend:latest
     volumes:
       - /www/wwwroot/projectManagement/data:/app/data
     environment:
@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: ghcr.io/你的用户名/projectmanagement-frontend:latest
+    image: ghcr.io/lslnice/projectmanagement-frontend:latest
     ports:
       - "80:80"
     depends_on:
