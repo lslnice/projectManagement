@@ -291,11 +291,28 @@ function devStatusStyle(v) {
 }
 
 function remoteUrl(id) { return `${location.origin}/api/v1/remote/check/${id}` }
-async function copyUrl(id) {
-  try {
-    await navigator.clipboard.writeText(remoteUrl(id))
-    ElMessage.success('接口地址已复制')
-  } catch (e) { ElMessage.error('复制失败') }
+function copyUrl(id) {
+  const text = remoteUrl(id)
+  // HTTPS 用 Clipboard API，HTTP 降级用 execCommand
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      ElMessage.success('接口地址已复制')
+    }).catch(() => fallbackCopy(text))
+  } else {
+    fallbackCopy(text)
+  }
+}
+
+function fallbackCopy(text) {
+  const el = document.createElement('textarea')
+  el.value = text
+  el.style.position = 'fixed'
+  el.style.opacity = '0'
+  document.body.appendChild(el)
+  el.select()
+  const ok = document.execCommand('copy')
+  document.body.removeChild(el)
+  ok ? ElMessage.success('接口地址已复制') : ElMessage.error('复制失败，请手动复制')
 }
 
 function switchTab(tab) {
