@@ -4,44 +4,31 @@ on:
   push:
     branches: [main]
 
-env:
-  REGISTRY: ghcr.io
-
 jobs:
   build-backend:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v4
       - uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push backend
-        uses: docker/build-push-action@v5
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
         with:
           context: ./backend
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/projectmanagement-backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/projectmanagement-backend:latest
 
   build-frontend:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v4
       - uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push frontend
-        uses: docker/build-push-action@v5
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/projectmanagement-frontend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/projectmanagement-frontend:latest
