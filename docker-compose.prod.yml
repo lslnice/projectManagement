@@ -1,0 +1,16 @@
+services:
+  backend:
+    image: ghcr.io/你的用户名/projectmanagement-backend:latest
+    volumes:
+      - /www/wwwroot/projectManagement/data:/app/data
+    environment:
+      - DATABASE_PATH=/app/data/project_management.db
+    restart: unless-stopped
+
+  frontend:
+    image: ghcr.io/你的用户名/projectmanagement-frontend:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
